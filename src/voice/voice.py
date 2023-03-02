@@ -6,6 +6,9 @@ import os
 import sys
 import numpy as np
 
+import soundfile as sf
+import pyworld as pw
+
 from pydub import AudioSegment
 from scipy.io import wavfile
 
@@ -54,6 +57,21 @@ def detach_voice_chan(voice, left, right):
 
 
 
+def detach_voice_f0(x, rate):
+    _f0, _t = pw.harvest(x, rate)
+    return pw.stonemask(x, _f0, _t, rate)
+
+def detach_voice(x, rate):
+    _f0, t = pw.harvest(x, rate)
+
+    f0 = pw.stonemask(x, _f0, t, rate)
+    sp =  pw.cheaptrick(x, f0, t, rate)
+    ap = pw.d4c(x, f0, t, rate)
+
+    return f0, sp, ap
+
+def voice_synthesize(f0, sp, ap, rate):
+     return pw.synthesize(f0, sp, ap, rate, pw.default_frame_period)
 
 if __name__ == '__main__':
     pass

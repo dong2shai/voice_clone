@@ -8,10 +8,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='voice clone tool')
 
     parser.add_argument('--phoneme', type=str, 
-                                    help='The file of voice as phoneme', required=True)
+                                    help='The path of voice as phoneme', required=True)
 
     parser.add_argument('--base-band',type=str, 
-                                    help='The file of voice as base band', required=True)
+                                    help='The path of voice as base band', required=True)
 
     parser.add_argument('--output', type=str,
                                     help='The path of result voice tools handled ', required=False)
