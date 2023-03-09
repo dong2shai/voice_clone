@@ -2,9 +2,15 @@
 
 import os
 import argparse
+import filetype 
 
+import voice as vc
+
+def file_type(filepath):
+    return filetype.guess(filepath)
 
 if __name__ == "__main__":
+    """
     parser = argparse.ArgumentParser(description='voice clone tool')
 
     parser.add_argument('--phoneme', type=str, 
@@ -23,7 +29,9 @@ if __name__ == "__main__":
 
     if not os.path.isfile(args.base_band):
         raise Exception("The base band file not exists")
-
+    """
+    v, rate = vc.voice_load("resources/luo.mp3")
+    print(rate)
 
 
 

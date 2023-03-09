@@ -4,8 +4,9 @@
 import librosa
 import os 
 import sys
-import numpy as np
+import filetype
 
+import numpy as np
 import soundfile as sf
 import pyworld as pw
 
@@ -20,7 +21,7 @@ def voice_duration(voice):
     return librosa.get_duration(voice)
 
 def voice_rate(voice):
-    y, sr = librosa(voice, sr=None)
+    y, sr = librosa.load(voice, sr=None)
     return sr
 
 def compare_duration(voice1, voice2):
@@ -30,12 +31,15 @@ def compare_duration(voice1, voice2):
     return d1 == d2 
 
 
-def  reset_sampling_rate(voice, rate, path):
-    y, sr = librosa(voice, sr=None)
-    y_rt = librosa.resample(y, sr, rate)
+def reset_rate(voice, src_rate, rate):
+     return librosa.resample(voice, orig_sr=src_rate, target_sr=rate)
 
-    librosa.output.write_wav(path, y_rt, rate)
 
+def voice_load(voice):
+    return librosa.load(voice, sr=None)
+
+def store_voice(y, rate, path):
+    librosa.output.write_wav(path, y, rate)
 
 def detach_voice_chan(voice, left, right):
     left_voice = []
@@ -55,23 +59,7 @@ def detach_voice_chan(voice, left, right):
     except:
         print('Unkonw error', sys.exec_info())
 
-
-
-def detach_voice_f0(x, rate):
-    _f0, _t = pw.harvest(x, rate)
-    return pw.stonemask(x, _f0, _t, rate)
-
-def detach_voice(x, rate):
-    _f0, t = pw.harvest(x, rate)
-
-    f0 = pw.stonemask(x, _f0, t, rate)
-    sp =  pw.cheaptrick(x, f0, t, rate)
-    ap = pw.d4c(x, f0, t, rate)
-
-    return f0, sp, ap
-
-def voice_synthesize(f0, sp, ap, rate):
-     return pw.synthesize(f0, sp, ap, rate, pw.default_frame_period)
-
 if __name__ == '__main__':
-    pass
+    voice, rate = voice_load("output.mp3")
+    reset_rate(voice, rate, 16000) 
+    
